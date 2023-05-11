@@ -52,6 +52,7 @@ namespace MyGame
                         else
                         {
                             Console.WriteLine($"Диапазон шага от 1 до {100 - score}");
+                            AddScore();
                         }
                     }
                     break;
