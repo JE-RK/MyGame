@@ -12,61 +12,68 @@ namespace MyGame
         public Player player2;
         public string chek;
         public int score;
-        public void CreatePlayer()
+        public void CreatePlayers(string p1_name, string p2_name)
         {
-            Console.WriteLine("Введите имя первого игрока");
-            player1 = new Player(Console.ReadLine());
-            Console.WriteLine("Введите имя второго игрока");
-            player2 = new Player(Console.ReadLine());
-        }
-        public void AddScore()
-        {
-            string lineread = Console.ReadLine();
-            switch (lineread)
+            if (p1_name == "" || p2_name == "")
             {
-                case ("/exit"):
-                    Environment.Exit(0);
-                    break;
-                default:
-                    int s = Convert.ToInt32(lineread);
-                    if (score < 91)
+                throw new Exception();
+            }
+            else
+            {   
+                player1 = new Player(p1_name);
+                player2 = new Player(p2_name);
+            }
+            
+        }
+        public string AddScore(string lineread)
+        {
+            int number;
+            string res = "";
+            if (int.TryParse(lineread, out number))
+            {
+                if (score < 91)
+                {
+                    if (number >= 1 && number <= 10)
                     {
-                        if (s >= 1 && s <= 10)
-                        {
-                            score += s;
-                            Console.WriteLine($"Текущий счет: {score}");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Диапазон шага от 1 до 10");
-                            AddScore();
-                        }
+                        score += number;
+                        res = $"Текущий счет: {score}\n";
                     }
                     else
                     {
-                        if (s >= 1 && s <= 100 - score)
-                        {
-                            score += s;
-                            Console.WriteLine($"Текущий счет: {score}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Диапазон шага от 1 до {100 - score}");
-                            AddScore();
-                        }
+                        res = ("Диапазон шага от 1 до 10\n");
                     }
-                    break;
+                }
+                else
+                {
+                    if (number >= 1 && number <= 100 - score)
+                    {
+                        score += number;
+                        res = ($"Текущий счет: {score}\n");
+                    }
+                    else
+                    {
+                        res = ($"Диапазон шага от 1 до {100 - score}\n");
+                    }
+                }
             }
-
+            else if (lineread == "/exit")
+            {
+                Environment.Exit(0);
+            }
+            else
+            {
+                throw new Exception();
+            }
+            return res;
         }
-        public void Roll()
+        public string FirstMove()
         {
-            Console.WriteLine("Определяем кто будет ходить первым...");
+            Random random = new Random();
             while (player1.random_number == player2.random_number)
             {
-                Random random = new Random();
-                player1.random_number = random.Next(1, 100);
-                player2.random_number = random.Next(1, 100);
+                
+                player1.random_number = random.Next(0, 2);
+                player2.random_number = random.Next(0, 2);
                 if (player1.random_number > player2.random_number)
                 {
                     chek = player1.name;
@@ -76,39 +83,36 @@ namespace MyGame
                     chek = player2.name;
                 }
             }
-            Console.WriteLine("Рандом определил рандомное число для первого игрока - " + player1.random_number);
-            Console.WriteLine("Рандом определил рандомное число для второго игрока - " + player2.random_number);
+            return chek;
         }
-        public void Start()
+        public string Start(string s)
         {
-            CreatePlayer();
-            Roll();
-            Console.WriteLine($"Число у игрока {chek} больше! Он ходит первым");
-            Console.WriteLine("Игра началась. Чтобы выйти введите /exit");
-            while (true)
+            string res;
+            res =  AddScore(s);
+            if (score < 100)
             {
 
-                Console.Write($"Очередь игрока {chek}");
-                Console.WriteLine();
-                AddScore();
-                if (score < 100)
+                if (!res.Contains("Диапазон") && chek == player1.name)
                 {
-                    if (chek == player1.name)
-                    {
-                        chek = player2.name;
-                    }
-                    else
-                    {
-                        chek = player1.name;
-                    }
+                    chek = player2.name;
+                    res += "Ход игрока " + chek;
+                }
+                else if (!res.Contains("Диапазон") && chek == player2.name)
+                {
+                    chek = player1.name;
+                    res += "Ход игрока " + chek;
                 }
                 else
                 {
-                    break;
+                    res += "Ход игрока " + chek;
                 }
-
             }
-            Console.WriteLine("Выиграл игрок " + chek);
+            else
+            {
+                res += ("Выиграл игрок " + chek);
+                 
+            }
+            return res;
         }
     }
 }
