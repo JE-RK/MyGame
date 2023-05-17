@@ -4,9 +4,14 @@ namespace GameLibrary
 {
     public class Game
     {
-        public Player player1;
-        public Player player2;
-        public int score;
+        private Player player1;
+        private Player player2;
+        private string chek;
+        private int score;
+        public string Chek
+        {
+            get { return chek; }
+        }
         public void CreatePlayers(string p1_name, string p2_name)
         {
             if (p1_name == "" || p2_name == "")
@@ -17,111 +22,95 @@ namespace GameLibrary
             {
                 player1 = new Player(p1_name);
                 player2 = new Player(p2_name);
+                FirstMove();
             }
 
         }
-        public string AddScore(string lineread)
+
+        public void GameClosing()
         {
-            int number;
-            string res = "";
-            if (int.TryParse(lineread, out number))
+            Environment.Exit(0);
+        }
+        private bool IsValid(int number)
+        {
+            bool res;
+            if (number >= 1 && number <= 10)
             {
-                if (score < 91)
-                {
-                    if (number >= 1 && number <= 10)
-                    {
-                        score += number;
-                        res = $"Текущий счет: {score}\n";
-                    }
-                    else
-                    {
-                        res = ("Диапазон шага от 1 до 10\n");
-                    }
-                }
-                else
-                {
-                    if (number >= 1 && number <= 100 - score)
-                    {
-                        score += number;
-                        res = ($"Текущий счет: {score}\n");
-                    }
-                    else
-                    {
-                        res = ($"Диапазон шага от 1 до {100 - score}\n");
-                    }
-                }
-            }
-            else if (lineread == "/exit")
-            {
-                Environment.Exit(0);
-            }
+                res = true;
+            }       
             else
             {
-                throw new Exception();
+                res = false;
+            }
+            if (number > 100 - score)
+            {
+                res = false;
             }
             return res;
         }
-        public void FirstMove()
+        private void FirstMove()
         {
             Random random = new Random();
-            while (player1.random_number == player2.random_number)
+            int firstmove = random.Next(0, 2);
+            if (firstmove == 0)
             {
-
-                player1.random_number = random.Next(0, 2);
-                player2.random_number = random.Next(0, 2);
-                if (player1.random_number > player2.random_number)
-                {
-                    player1.chek = true;
-                }
-                else
-                {
-                    player2.chek = true;
-                }
+                chek = player1.name;
+            }
+            else
+            {
+                chek = player2.name;
             }
         }
-        public string Start(string s)
+        public bool EndGame()
         {
-            string res;
-            res = AddScore(s);
-            if (score < 100)
+            bool b = false;
+            if (score != 100)
             {
-
-                if (!res.Contains("Диапазон") && player1.chek)
+                b = true;
+                
+            }
+            return b;
+        }
+        public string NextStep(int number)
+        {           
+            string res = "";
+            bool b = IsValid(number);
+            if (b)
+            {
+                score += number;
+                if (EndGame())
                 {
-                    player1.chek = false;
-                    player2.chek = true;
-                    res += "Ход игрока " + player2.name;
-                }
-                else if (!res.Contains("Диапазон") && player2.chek)
-                {
-                    player2.chek = false;
-                    player1.chek = true;
-                    res += "Ход игрока " + player1.name;
-                }
-                else
-                {
-                    if (player1.chek)
+                    
+                    if (chek == player1.name)
                     {
-                        res += "Ход игрока " + player1.name;
+                        chek = player2.name;
                     }
                     else
                     {
-                        res += "Ход игрока " + player2.name;
+                        chek = player1.name;
                     }
+                    res += $"Счет: {score}\n";
+                    res += $"Ход игрока - {chek}";
+                }
+                else
+                {
+                    res += $"Счет:  {score}\n";
+                    res += "Выиграл - " + chek;
                 }
             }
             else
             {
-                if (player1.chek)
+                if (score >= 91)
                 {
-                    res += ("Выиграл игрок " + player1.name);
+                    res += $"Диапазон хода от 1 до {100 - score}\n";
+                    res += $"Ход игрока - {chek}";
                 }
                 else
                 {
-                    res += ("Выиграл игрок " + player2.name);
+                    res += "Диапазон хода от 1 до 10\n";
+                    res += $"Ход игрока - {chek}";
                 }
                 
-
             }
             return res;
         }

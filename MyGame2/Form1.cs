@@ -24,7 +24,7 @@ namespace MyGame2
             {
                 game.CreatePlayers(textBox1.Text, textBox2.Text);
                 richTextBox1.Text = "Игроки созданы\n";
-                richTextBox1.Text += $"Игрок {game.FirstMove()}  ходит первым";
+                richTextBox1.Text += $"Игрок {game.Chek}  ходит первым";
                 textBox1.Hide();
                 textBox2.Hide();
                 label1.Hide();
@@ -45,16 +45,16 @@ namespace MyGame2
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (game.chek == game.player1.name)
+            if (game.Chek == label3.Text)
             {
-                richTextBox1.Text = game.Start(domainUpDown1.Text);
+                richTextBox1.Text = game.NextStep(int.Parse(domainUpDown1.Text));
             }
             else
             {
-                richTextBox1.Text = game.Start(domainUpDown2.Text);
+                richTextBox1.Text = game.NextStep(int.Parse(domainUpDown2.Text));
             }
 
-            if (game.score == 100)
+            if (game.EndGame() == false)
             {
                 button2.Hide();
                 button3.Hide();
@@ -69,15 +69,13 @@ namespace MyGame2
                 domainUpDown2.Enabled = false;
                 domainUpDown1.Text = "1";
                 domainUpDown2.Text = "1";
-                game.score = 0;
 
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            richTextBox1.Text += "\n" + "/exit";
-            richTextBox1.Text += game.AddScore(richTextBox1.Lines[richTextBox1.Lines.Length - 1]);
+            game.GameClosing();
         }
 
         private void Form1_Load(object sender, EventArgs e)

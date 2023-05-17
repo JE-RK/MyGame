@@ -13,19 +13,21 @@ namespace MyGame
             string p2_name = Console.ReadLine();
             game.CreatePlayers(p1_name, p2_name);
             Console.WriteLine("Игроки созданы");
-            game.FirstMove();
-            if (game.player1.chek)
+            Console.WriteLine("Первым ходит игрок " + game.Chek);
+            while (game.EndGame())
             {
-                Console.WriteLine($"Ходит игрок {game.player1.name}");
-            }
-            else
-            {
-                Console.WriteLine($"Ходит игрок {game.player2.name}");
-            }
-            while (game.score != 100)
-            {
-                string num = Console.ReadLine();
-                Console.WriteLine(game.Start(num));
+                string lineread = Console.ReadLine();
+                
+                if (lineread == "/exit")
+                {
+                    game.GameClosing();
+                }
+                else
+                {
+                    int num = int.Parse(lineread);
+                    Console.WriteLine(game.NextStep(num));
+                }
+               
             }
         }
     }
