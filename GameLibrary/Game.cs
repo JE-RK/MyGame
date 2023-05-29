@@ -4,32 +4,31 @@ namespace GameLibrary
 {
     public class Game
     {
-        private Player player1;
-        private Player player2;
-        private string chek;
-        private int score;
-        public string Chek
-        {
-            get { return chek; }
-        }
+        public Player player1;
+        public IPlayer player2;
+        private string _chek;
+        private int _score = 0;
+        public int Score { get { return _score; } }
+        public string Last { get; set; }
+        public string Chek { get { return _chek; } }
+        public bool GameWithBot { get; set; }
+        
         public void CreatePlayers(string p1_name, string p2_name)
         {
-            if (p1_name == "" || p2_name == "")
+            player1 = new Player(p1_name, this);
+            if (GameWithBot)
             {
-                throw new Exception();
+                player2 = new Computer(this);
             }
             else
             {
-                player1 = new Player(p1_name);
-                player2 = new Player(p2_name);
-                FirstMove();
+                player2 = new Player(p2_name, this);
+            } 
+            if (player1.Name == player2.Name)
+            {
+                throw new Exception("У игроков одинаковые имена.");
             }
-
-        }
-
-        public void GameClosing()
-        {
-            Environment.Exit(0);
+            FirstMove();
         }
         private bool IsValid(int number)
         {
@@ -42,7 +41,7 @@ namespace GameLibrary
             {
                 res = false;
             }
-            if (number > 100 - score)
+            if (number > 100 - _score)
             {
                 res = false;
             }
@@ -54,65 +53,63 @@ namespace GameLibrary
             int firstmove = random.Next(0, 2);
             if (firstmove == 0)
             {
-                chek = player1.name;
+                _chek = player1.Name;
             }
             else
             {
-                chek = player2.name;
+                _chek = player2.Name;
             }
+        }
+        public void ResetScore()
+        {
+            _score = 0;
+            _chek = null;
         }
         public bool EndGame()
         {
             bool b = false;
-            if (score != 100)
+            if (_score == 100)
             {
                 b = true;
-                
             }
             return b;
         }
-        public string NextStep(int number)
-        {           
-            string res = "";
-            bool b = IsValid(number);
-            if (b)
+        public void NextStep(int number)
+        { 
+            if (_chek == Last) 
             {
-                score += number;
-                if (EndGame())
+                string res = "";
+                bool b = IsValid(number);
+                if (b)
                 {
-                    
-                    if (chek == player1.name)
+                    _score += number;
+                    if (_chek == player1.Name)
                     {
-                        chek = player2.name;
+                        _chek = player2.Name;
                     }
                     else
                     {
-                        chek = player1.name;
+                        _chek = player1.Name;
                     }
-                    res += $"Счет: {score}\n";
-                    res += $"Ход игрока - {chek}";
                 }
                 else
                 {
-                    res += $"Счет:  {score}\n";
-                    res += "Выиграл - " + chek;
+                    if (_score >= 91)
+                    {
+                        res += $"Диапазон хода от 1 до {100 - _score}\n";
+                        throw new Exception(res);
+                    }
+                    else
+                    {
+                        res += "Диапазон хода от 1 до 10\n";
+                        throw new Exception(res);
+                    }
                 }
             }
             else
             {
-                if (score >= 91)
-                {
-                    res += $"Диапазон хода от 1 до {100 - score}\n";
-                    res += $"Ход игрока - {chek}";
-                }
-                else
-                {
-                    res += "Диапазон хода от 1 до 10\n";
-                    res += $"Ход игрока - {chek}";
-                }
-                
+                throw new Exception("Очередь другого игрока.");            
             }
-            return res;
         }
     }
 }

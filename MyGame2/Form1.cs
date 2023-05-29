@@ -13,18 +13,21 @@ namespace MyGame2
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        Form2 form2;
+        Game game;
+        public Form1(Form2 form2, Game game)
         {
+            this.form2 = form2;
+            this.game = game;
             InitializeComponent();
         }
-        Game game = new Game();
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
                 game.CreatePlayers(textBox1.Text, textBox2.Text);
                 richTextBox1.Text = "Игроки созданы\n";
-                richTextBox1.Text += $"Игрок {game.Chek}  ходит первым";
+                richTextBox1.Text += $"Игрок {game.Chek}  ходит первым\n";
                 textBox1.Hide();
                 textBox2.Hide();
                 label1.Hide();
@@ -36,10 +39,18 @@ namespace MyGame2
                 domainUpDown2.Enabled = true;
                 button2.Show();
                 button3.Show();
+                if (game.Chek == game.player2.Name && game.player2 is Computer computer)
+                {
+                    computer.Think();
+                    richTextBox1.Text += game.player2.Step() + "\n";
+                    game.NextStep(game.player2.Step());
+                    richTextBox1.Text += "Счет - " + game.Score + "\n";
+                    richTextBox1.Text += "Ходит игрок " + game.Chek + "\n";
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Неверно введены имена.");
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -47,15 +58,30 @@ namespace MyGame2
         {
             if (game.Chek == label3.Text)
             {
-                richTextBox1.Text = game.NextStep(int.Parse(domainUpDown1.Text));
+                game.player1.SetStep(int.Parse(domainUpDown1.Text));
+                game.NextStep(game.player1.Step());
             }
             else
             {
-                richTextBox1.Text = game.NextStep(int.Parse(domainUpDown2.Text));
+                int step;
+                step = int.Parse(domainUpDown2.Text);
+                game.player2.SetStep(step);
+                game.NextStep(game.player2.Step());
             }
-
-            if (game.EndGame() == false)
+            richTextBox1.Text = "Счет - " + game.Score + "\n";
+            richTextBox1.Text += "Ходит игрок " + game.Chek + "\n";
+            if (game.Chek == game.player2.Name && game.player2 is Computer computer)
             {
+                computer.Think();
+                richTextBox1.Text += game.player2.Step() + "\n";
+                game.NextStep(game.player2.Step());
+                richTextBox1.Text += "Счет - " + game.Score + "\n";
+                richTextBox1.Text += "Ходит игрок " + game.Chek + "\n";
+            }
+            if (game.EndGame() == true)
+            {
+                richTextBox1.Text = "Счет - " + game.Score + "\n";
+                richTextBox1.Text = "Выиграл - " + game.Last + "\n";
                 button2.Hide();
                 button3.Hide();
                 textBox1.Show();
@@ -69,19 +95,36 @@ namespace MyGame2
                 domainUpDown2.Enabled = false;
                 domainUpDown1.Text = "1";
                 domainUpDown2.Text = "1";
-
+                game.ResetScore();
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            game.GameClosing();
+            Environment.Exit(0);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            button2.Hide();
-            button3.Hide();
+            if (game.GameWithBot)
+            {
+                button2.Hide();
+                button3.Hide();
+                textBox2.Enabled = false;
+                domainUpDown2.Enabled = false;
+
+            }
+            else
+            {
+                button2.Hide();
+                button3.Hide();
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            form2.Show();
         }
     }
 }
