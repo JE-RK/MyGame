@@ -48,6 +48,7 @@ namespace GameLibrary
         }
         public int Step()
         {
+            Think();
             return _step;
         }
     }

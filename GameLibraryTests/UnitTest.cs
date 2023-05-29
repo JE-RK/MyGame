@@ -35,7 +35,7 @@ namespace GameLibraryTests
         }
 
         [TestMethod]
-        public void SetStepTest()
+        public void PlayerSetStepTest()
         {
             int step = 1;
             player.SetStep(step);
@@ -64,5 +64,50 @@ namespace GameLibraryTests
                 game.NextStep(game.player1.Step());
             }
         }
+
+        [ExpectedException(typeof(Exception), "Диапазон хода от 1 до 10")]
+        [TestMethod]
+        public void NextStepValues12()
+        {
+            game.GameWithBot = false;
+            game.CreatePlayers("Name1", "Name2");
+            do
+            {
+                game.CreatePlayers("Name1", "Name2");
+            }
+            while (game.Chek != game.player1.Name);
+            game.player1.SetStep(12);
+            game.NextStep(game.player1.Step());
+        }
+
+        [TestMethod]
+        public void EndGameTest()
+        {
+            game.GameWithBot = false;
+            game.CreatePlayers("Name1", "Name2");
+            while (game.Score != 100)
+            {
+                if (game.Chek == game.player1.Name)
+                {
+                    game.player1.SetStep(10);
+                    game.NextStep(game.player1.Step());
+                }
+                else
+                {
+                    game.player2.SetStep(10);
+                    game.NextStep(game.player2.Step());
+                } 
+            }
+            Assert.IsTrue(game.EndGame());
+        }
+
+        [TestMethod]
+        public void ResetScoreTest()
+        {
+            game.ResetScore();
+            Assert.AreEqual(0, game.Score);
+        }
+
+
     }
 }

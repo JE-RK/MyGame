@@ -70,9 +70,8 @@ namespace MyGame2
             }
             richTextBox1.Text = "Счет - " + game.Score + "\n";
             richTextBox1.Text += "Ходит игрок " + game.Chek + "\n";
-            if (game.Chek == game.player2.Name && game.player2 is Computer computer)
+            if (game.Chek == game.player2.Name && game.GameWithBot)
             {
-                computer.Think();
                 richTextBox1.Text += game.player2.Step() + "\n";
                 game.NextStep(game.player2.Step());
                 richTextBox1.Text += "Счет - " + game.Score + "\n";

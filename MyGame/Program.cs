@@ -66,10 +66,11 @@ namespace MyGame
                     {
                         try
                         {
+                            string lineread;
                             Console.WriteLine("Ходит игрок " + game.Chek);
                             if (game.Chek == game.player1.Name)
                             {
-                                string lineread = Console.ReadLine();
+                                lineread = Console.ReadLine();
                                 Ending(lineread);
                                 int num = int.Parse(lineread);
                                 game.player1.SetStep(num);
@@ -77,12 +78,10 @@ namespace MyGame
                             }
                             else
                             {
-                                string lineread;
-                                if (game.player2 is Computer computer)
+                                if (game.GameWithBot)
                                 {
-                                    computer.Think();
                                     lineread = game.player2.Step().ToString();
-                                    Console.WriteLine(lineread);
+                                    Console.WriteLine(game.player2.Step().ToString());
                                 }
                                 else
                                 {
