@@ -6,50 +6,42 @@ namespace GameLibrary
 {
     public class Computer : IPlayer
     {
-        public string Name { get; set; }
+        public string Name { get; } = "Bot";
         private List<int> _numbers = new List<int>() { 12, 23, 34, 45, 56, 67, 78, 89, 100 };
-        Game game;
-        private int _step;
-        //public int Move { get { return _step; } } 
+        private Game _game;
         public Computer(Game game)
         {
-            this.game = game;
-            Name = "Bot";
+            this._game = game;
         }
-        public void Think()
+        private int Think()
         {
-            game.Last = Name;
-            if (game.Score == 0)
+            if (_game.Score == 0)
             {
-                _step = 1;
+                return 1;
             }
-            else if (game.Score == 1 || _numbers.Contains(game.Score))
+            else if (_game.Score == 1 || _numbers.Contains(_game.Score))
             {
                 Random random = new Random();
-                _step = random.Next(1, 11);
+                return random.Next(1, 11);
             }
             else
             {
                 int findnum = 0;
                 foreach (var number in _numbers)
                 {
-                    if (game.Score < number)
+                    if (_game.Score < number)
                     {
                         findnum = number;
                         break;
                     }
                 }
-                _step = findnum - game.Score;
+                return findnum - _game.Score;
             }
         }
-        public void SetStep(int num)
+        public void Step()
         {
-            _step = num;
-        }
-        public int Step()
-        {
-            Think();
-            return _step;
+            _game.Last = Name;
+            _game.NextStep(Think());
         }
     }
 }

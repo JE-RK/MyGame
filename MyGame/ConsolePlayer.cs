@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GameLibrary;
 
-namespace GameLibrary
+namespace MyGame
 {
     public class Player : IPlayer
     {
         public string Name { get; }
-        private int _step;
         private Game _game;
         public Player(string name, Game game)
         {
@@ -17,15 +17,19 @@ namespace GameLibrary
             Name = name;
             this._game = game;
         }
-
-        public void SetStep(int num)
+        private void Ending(string lineread)
         {
-            _step = num;
+            if (lineread == "/exit")
+            {
+                Environment.Exit(0);
+            }
         }
-        public int Step()
+        public void Step()
         {
             _game.Last = Name;
-            return _step;
+            string lineread = Console.ReadLine();
+            Ending(lineread);
+            _game.NextStep(int.Parse(lineread));
         }
     }
 }

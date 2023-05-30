@@ -17,13 +17,6 @@ namespace MyGame
                 Console.WriteLine("Выиграл - " + game.Last);
             }
         }
-        static void Ending(string lineread)
-        {
-            if (lineread == "/exit")
-            {
-                Environment.Exit(0);
-            }
-        }
         static void Main(string[] args)
         {   
             Game game = new Game();
@@ -39,19 +32,17 @@ namespace MyGame
                             string lineread = Console.ReadLine();
                             if (lineread == "/bot")
                             {
-                                game.GameWithBot = true;
                                 Console.WriteLine("Введите имя первого игрока");
                                 string p1_name = Console.ReadLine();
-                                game.CreatePlayers(p1_name, "BOT");
+                                game.CreatePlayers(new Player(p1_name, game));
                             }
                             else
                             {
-                                game.GameWithBot = false;
                                 Console.WriteLine("Введите имя первого игрока");
                                 string p1_name = Console.ReadLine();
                                 Console.WriteLine("Введите имя второго игрока");
                                 string p2_name = Console.ReadLine();
-                                game.CreatePlayers(p1_name, p2_name);
+                                game.CreatePlayers(new Player(p1_name, game), new Player(p2_name, game));
                             }
                         }
                         catch (Exception ex)
@@ -60,37 +51,20 @@ namespace MyGame
                             Console.WriteLine("Попробуйте еще раз");
                         }
                     }
-                    Console.WriteLine("Игроки созданы");
+                    Console.WriteLine("Игра началась, чтобы выйти - \"/exit\"");
                     
                     while (game.EndGame() == false)
                     {
                         try
                         {
-                            string lineread;
                             Console.WriteLine("Ходит игрок " + game.Chek);
                             if (game.Chek == game.player1.Name)
                             {
-                                lineread = Console.ReadLine();
-                                Ending(lineread);
-                                int num = int.Parse(lineread);
-                                game.player1.SetStep(num);
-                                game.NextStep(game.player1.Step());
+                                game.player1.Step();
                             }
                             else
                             {
-                                if (game.GameWithBot)
-                                {
-                                    lineread = game.player2.Step().ToString();
-                                    Console.WriteLine(game.player2.Step().ToString());
-                                }
-                                else
-                                {
-                                    lineread = Console.ReadLine();
-                                }
-                                Ending(lineread);
-                                int num = int.Parse(lineread);
-                                game.player2.SetStep(num);
-                                game.NextStep(game.player2.Step());
+                                game.player2.Step();
                             }
                             GameDisplay(game);
                         }

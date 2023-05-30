@@ -6,8 +6,7 @@ namespace GameLibrary
 {
     public interface IPlayer
     {
-        string Name { get; set; }
-        int Step();
-        void SetStep(int num);
+        string Name { get; }
+        void Step();
     }
 }
