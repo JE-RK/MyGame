@@ -7,7 +7,7 @@ namespace MyGame
         static void GameDisplay(Game game)
         {
 
-            if (game.EndGame() == false)
+            if (!game.EndGame())
             {
                 Console.WriteLine($"Счет: {game.Score}\n");
             }
@@ -22,7 +22,7 @@ namespace MyGame
             Game game = new Game();
             while (true)
             {
-                if (game.EndGame() == false)
+                if (!game.EndGame())
                 {
                     while (game.Chek == null)
                     {
@@ -34,7 +34,7 @@ namespace MyGame
                             {
                                 Console.WriteLine("Введите имя первого игрока");
                                 string p1_name = Console.ReadLine();
-                                game.CreatePlayers(new Player(p1_name, game));
+                                game.CreatePlayers(new ConsolePlayer(p1_name, game));
                             }
                             else
                             {
@@ -42,7 +42,7 @@ namespace MyGame
                                 string p1_name = Console.ReadLine();
                                 Console.WriteLine("Введите имя второго игрока");
                                 string p2_name = Console.ReadLine();
-                                game.CreatePlayers(new Player(p1_name, game), new Player(p2_name, game));
+                                game.CreatePlayers(new ConsolePlayer(p1_name, game), new ConsolePlayer(p2_name, game));
                             }
                         }
                         catch (Exception ex)
@@ -53,7 +53,7 @@ namespace MyGame
                     }
                     Console.WriteLine("Игра началась, чтобы выйти - \"/exit\"");
                     
-                    while (game.EndGame() == false)
+                    while (!game.EndGame())
                     {
                         try
                         {
