@@ -25,7 +25,11 @@ namespace MyGame2
         {
             try
             {
-                game.CreatePlayers(textBox1.Text, textBox2.Text);
+                FormPlayer p1 = new FormPlayer(textBox1.Text, game);
+                FormPlayer p2 = new FormPlayer(textBox2.Text, game);
+                p1.StepMethod = RegStep;
+                p2.StepMethod = RegStep;
+                game.CreatePlayers(p1, p2);
                 richTextBox1.Text = "Игроки созданы\n";
                 richTextBox1.Text += $"Игрок {game.Chek}  ходит первым\n";
                 textBox1.Hide();
@@ -39,14 +43,6 @@ namespace MyGame2
                 domainUpDown2.Enabled = true;
                 button2.Show();
                 button3.Show();
-                if (game.Chek == game.player2.Name && game.player2 is Computer computer)
-                {
-                    computer.Think();
-                    richTextBox1.Text += game.player2.Step() + "\n";
-                    game.NextStep(game.player2.Step());
-                    richTextBox1.Text += "Счет - " + game.Score + "\n";
-                    richTextBox1.Text += "Ходит игрок " + game.Chek + "\n";
-                }
             }
             catch (Exception ex)
             {
@@ -54,28 +50,28 @@ namespace MyGame2
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        public int RegStep()
         {
-            if (game.Chek == label3.Text)
+            if (game.Chek == game.player1.Name)
             {
-                game.player1.SetStep(int.Parse(domainUpDown1.Text));
-                game.NextStep(game.player1.Step());
+                return int.Parse(domainUpDown1.Text);
             }
             else
             {
-                int step;
-                step = int.Parse(domainUpDown2.Text);
-                game.player2.SetStep(step);
-                game.NextStep(game.player2.Step());
+                return int.Parse(domainUpDown2.Text);
             }
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
             richTextBox1.Text = "Счет - " + game.Score + "\n";
             richTextBox1.Text += "Ходит игрок " + game.Chek + "\n";
-            if (game.Chek == game.player2.Name && game.GameWithBot)
+            if (game.Chek == game.player1.Name)
             {
-                richTextBox1.Text += game.player2.Step() + "\n";
-                game.NextStep(game.player2.Step());
-                richTextBox1.Text += "Счет - " + game.Score + "\n";
-                richTextBox1.Text += "Ходит игрок " + game.Chek + "\n";
+                game.player1.Step();
+            }
+            else
+            {
+                game.player2.Step();
             }
             if (game.EndGame() == true)
             {
@@ -105,19 +101,8 @@ namespace MyGame2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (game.GameWithBot)
-            {
-                button2.Hide();
-                button3.Hide();
-                textBox2.Enabled = false;
-                domainUpDown2.Enabled = false;
-
-            }
-            else
-            {
-                button2.Hide();
-                button3.Hide();
-            }
+            button2.Hide();
+            button3.Hide();
         }
 
         private void button4_Click(object sender, EventArgs e)

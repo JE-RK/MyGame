@@ -20,14 +20,12 @@ namespace MyGame2
         Game game = new Game();
         private void button2_Click(object sender, EventArgs e)
         {
-            game.GameWithBot = false;
             new Form1(this, game).Show();
             this.Hide();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            game.GameWithBot = true;
             new Form1(this, game).Show();
             this.Hide();
         }
