@@ -23,6 +23,7 @@ namespace MyGame2
         public RegStep StepMethod { get; set; }
         public void Step()
         {
+            _game.Last = Name;
             _game.NextStep(StepMethod());
         }
     }

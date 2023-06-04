@@ -13,20 +13,25 @@ namespace MyGame2
 {
     public partial class Form2 : Form
     {
+        public Game game = new Game();
+        private bool _gamewithbot = false;
+        public bool GameWithBot { get { return _gamewithbot; } }
         public Form2()
         {
             InitializeComponent();
         }
-        Game game = new Game();
+        
         private void button2_Click(object sender, EventArgs e)
         {
-            new Form1(this, game).Show();
+            _gamewithbot = false;
+            new Form1(this).Show();
             this.Hide();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            new Form1(this, game).Show();
+            _gamewithbot = true;
+            new Form1(this).Show();
             this.Hide();
         }
 

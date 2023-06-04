@@ -14,24 +14,44 @@ namespace MyGame2
     public partial class Form1 : Form
     {
         Form2 form2;
-        Game game;
-        public Form1(Form2 form2, Game game)
+        public Form1(Form2 form2)
         {
             this.form2 = form2;
-            this.game = game;
             InitializeComponent();
         }
+
+        public int Player1Step() => int.Parse(domainUpDown1.Text);
+
+        public int Player2Step() => int.Parse(domainUpDown2.Text);
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                FormPlayer p1 = new FormPlayer(textBox1.Text, game);
-                FormPlayer p2 = new FormPlayer(textBox2.Text, game);
-                p1.StepMethod = RegStep;
-                p2.StepMethod = RegStep;
-                game.CreatePlayers(p1, p2);
+                if (form2.GameWithBot)
+                {
+                    domainUpDown2.Enabled = false;
+                    FormPlayer p1 = new FormPlayer(textBox1.Text, form2.game);
+                    p1.StepMethod = Player1Step;
+                    form2.game.CreatePlayers(p1);
+                }
+                else
+                {
+                    domainUpDown2.Enabled = true;
+                    FormPlayer p1 = new FormPlayer(textBox1.Text, form2.game);
+                    FormPlayer p2 = new FormPlayer(textBox2.Text, form2.game);
+                    p1.StepMethod = Player1Step;
+                    p2.StepMethod = Player2Step;
+                    form2.game.CreatePlayers(p1, p2);
+                }
                 richTextBox1.Text = "Игроки созданы\n";
-                richTextBox1.Text += $"Игрок {game.Chek}  ходит первым\n";
+                richTextBox1.Text += $"Игрок {form2.game.Chek}  ходит первым\n";
+                if (form2.GameWithBot && form2.game.Chek == form2.game.player2.Name)
+                {
+                    int lastscore = form2.game.Score;
+                    form2.game.player2.Step();
+                    richTextBox1.Text += "Бот выбрал число - " + (form2.game.Score - lastscore).ToString() + "\n";
+                }
                 textBox1.Hide();
                 textBox2.Hide();
                 label1.Hide();
@@ -40,7 +60,6 @@ namespace MyGame2
                 label4.Text = textBox2.Text;
                 button1.Hide();
                 domainUpDown1.Enabled = true;
-                domainUpDown2.Enabled = true;
                 button2.Show();
                 button3.Show();
             }
@@ -49,34 +68,38 @@ namespace MyGame2
                 MessageBox.Show(ex.Message);
             }
         }
-
-        public int RegStep()
-        {
-            if (game.Chek == game.player1.Name)
-            {
-                return int.Parse(domainUpDown1.Text);
-            }
-            else
-            {
-                return int.Parse(domainUpDown2.Text);
-            }
-        }
         private void button2_Click(object sender, EventArgs e)
         {
-            richTextBox1.Text = "Счет - " + game.Score + "\n";
-            richTextBox1.Text += "Ходит игрок " + game.Chek + "\n";
-            if (game.Chek == game.player1.Name)
+            try
             {
-                game.player1.Step();
+                if (form2.game.Chek == form2.game.player1.Name)
+                {
+                    form2.game.player1.Step();
+                    richTextBox1.Text = "Счет - " + form2.game.Score + "\n";
+
+                }
+                else
+                {
+                    form2.game.player2.Step();
+                    richTextBox1.Text = "Счет - " + form2.game.Score + "\n";
+                }
+                if (form2.GameWithBot && form2.game.Chek == form2.game.player2.Name)
+                {
+                    int lastscore = form2.game.Score;
+                    form2.game.player2.Step();
+                    richTextBox1.Text = "Бот выбрал число - " + (form2.game.Score - lastscore).ToString() + "\n";
+                    richTextBox1.Text += "Счет - " + form2.game.Score + "\n";
+                }
+                richTextBox1.Text += "Ходит игрок " + form2.game.Chek + "\n";
             }
-            else
+            catch (Exception ex)
             {
-                game.player2.Step();
+                MessageBox.Show(ex.Message);
             }
-            if (game.EndGame() == true)
+            if (form2.game.EndGame() == true)
             {
-                richTextBox1.Text = "Счет - " + game.Score + "\n";
-                richTextBox1.Text = "Выиграл - " + game.Last + "\n";
+                richTextBox1.Text = "Счет - " + form2.game.Score + "\n";
+                richTextBox1.Text = "Выиграл - " + form2.game.Last + "\n";
                 button2.Hide();
                 button3.Hide();
                 textBox1.Show();
@@ -90,7 +113,7 @@ namespace MyGame2
                 domainUpDown2.Enabled = false;
                 domainUpDown1.Text = "1";
                 domainUpDown2.Text = "1";
-                game.ResetScore();
+                form2.game.ResetScore();
             }
         }
 
@@ -101,12 +124,17 @@ namespace MyGame2
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (form2.GameWithBot)
+            {
+                textBox2.Enabled = false;
+            }
             button2.Hide();
             button3.Hide();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            form2.game.ResetScore();
             this.Close();
             form2.Show();
         }
