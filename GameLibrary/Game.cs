@@ -9,9 +9,9 @@ namespace GameLibrary
         private string _chek;
         private int _score = 0;
         public int Score { get { return _score; } }
-        public string Last { get; set; }
         public string Chek { get { return _chek; } }
-        
+        private string _last;
+        public string Last { get; }
         public void CreatePlayers(IPlayer p1, IPlayer p2)
         {
             player1 = p1;
@@ -58,6 +58,24 @@ namespace GameLibrary
                 _chek = player2.Name;
             }
         }
+
+        public IPlayer WhoseMove()
+        {
+            if (_chek == player1.Name)
+            {
+                return player1;
+            }
+            else
+            {
+                return player2;
+            }
+        }
+
+        public void SetScore(int score)
+        {
+            _score = score;
+        }
+
         public void ResetScore()
         {
             _score = 0;
@@ -72,10 +90,11 @@ namespace GameLibrary
             }
             return b;
         }
-        public void NextStep(int number)
+        public void NextStep(int number, IPlayer player)
         { 
-            if (_chek == Last) 
+            if (_chek == player.Name) 
             {
+                _last = player.Name;
                 string res = "";
                 bool b = IsValid(number);
                 if (b)
@@ -94,19 +113,19 @@ namespace GameLibrary
                 {
                     if (_score >= 91)
                     {
-                        res += $"Диапазон хода от 1 до {100 - _score}\n";
+                        res += $"Диапазон хода от 1 до {100 - _score}";
                         throw new Exception(res);
                     }
                     else
                     {
-                        res += "Диапазон хода от 1 до 10\n";
+                        res += "Диапазон хода от 1 до 10";
                         throw new Exception(res);
                     }
                 }
             }
             else
             {
-                throw new Exception("Очередь другого игрока." + Chek);            
+                throw new Exception("Очередь игрока " + Chek);            
             }
         }
     }

@@ -7,24 +7,14 @@ using GameLibrary;
 
 namespace MyGame2
 {
-    public class FormPlayer : IPlayer
+    public class FormPlayer : Player
     {
         public string Name { get; }
         private Game _game;
-        public FormPlayer(string name, Game game)
-        {
-            if (String.IsNullOrEmpty(name))
-                throw new Exception("Недопустимы пустые имена.");
+        public FormPlayer(string name, Game game) : base(name, game) { }
 
-            Name = name;
-            _game = game;
-        }
         public delegate int RegStep();
         public RegStep StepMethod { get; set; }
-        public void Step()
-        {
-            _game.Last = Name;
-            _game.NextStep(StepMethod());
-        }
+        public override void Step() => _game.NextStep(StepMethod(), this);
     }
 }

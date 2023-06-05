@@ -38,10 +38,6 @@ namespace GameLibrary
                 return findnum - _game.Score;
             }
         }
-        public void Step()
-        {
-            _game.Last = Name;
-            _game.NextStep(Think());
-        }
+        public void Step() => _game.NextStep(Think(), this);
     }
 }
