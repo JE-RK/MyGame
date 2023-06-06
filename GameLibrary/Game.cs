@@ -2,16 +2,16 @@
 
 namespace GameLibrary
 {
-    public class Game
+    public class Game : IGame
     {
         public IPlayer player1;
         public IPlayer player2;
-        private string _chek;
+        private string _stepNowPlayerName;
         private int _score = 0;
         public int Score { get { return _score; } }
-        public string Chek { get { return _chek; } }
-        private string _last;
-        public string Last { get; }
+        public string StepNowPlayerName { get { return _stepNowPlayerName; } }
+        private string _lastPlayerName;
+        public string LastPlayerName { get { return _lastPlayerName; } }
         public void CreatePlayers(IPlayer p1, IPlayer p2)
         {
             player1 = p1;
@@ -51,17 +51,17 @@ namespace GameLibrary
             int firstmove = random.Next(0, 2);
             if (firstmove == 0)
             {
-                _chek = player1.Name;
+                _stepNowPlayerName = player1.Name;
             }
             else
             {
-                _chek = player2.Name;
+                _stepNowPlayerName = player2.Name;
             }
         }
 
         public IPlayer WhoseMove()
         {
-            if (_chek == player1.Name)
+            if (_stepNowPlayerName == player1.Name)
             {
                 return player1;
             }
@@ -71,16 +71,12 @@ namespace GameLibrary
             }
         }
 
-        public void SetScore(int score)
-        {
-            _score = score;
-        }
-
         public void ResetScore()
         {
             _score = 0;
-            _chek = null;
+            _stepNowPlayerName = null;
         }
+
         public bool EndGame()
         {
             bool b = false;
@@ -90,23 +86,23 @@ namespace GameLibrary
             }
             return b;
         }
+
         public void NextStep(int number, IPlayer player)
         { 
-            if (_chek == player.Name) 
+            if (_stepNowPlayerName == player.Name) 
             {
-                _last = player.Name;
+                _lastPlayerName = player.Name;
                 string res = "";
-                bool b = IsValid(number);
-                if (b)
+                if (IsValid(number))
                 {
                     _score += number;
-                    if (_chek == player1.Name)
+                    if (_stepNowPlayerName == player1.Name)
                     {
-                        _chek = player2.Name;
+                        _stepNowPlayerName = player2.Name;
                     }
                     else
                     {
-                        _chek = player1.Name;
+                        _stepNowPlayerName = player1.Name;
                     }
                 }
                 else
@@ -125,7 +121,7 @@ namespace GameLibrary
             }
             else
             {
-                throw new Exception("Очередь игрока " + Chek);            
+                throw new Exception("Очередь игрока " + StepNowPlayerName);            
             }
         }
     }

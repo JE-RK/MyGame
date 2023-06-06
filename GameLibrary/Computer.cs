@@ -8,10 +8,10 @@ namespace GameLibrary
     {
         public string Name { get; } = "Bot";
         private List<int> _numbers = new List<int>() { 12, 23, 34, 45, 56, 67, 78, 89, 100 };
-        private Game _game;
-        public Computer(Game game)
+        private IGame _game;
+        public Computer(IGame game)
         {
-            this._game = game;
+            _game = game;
         }
         private int Think()
         {

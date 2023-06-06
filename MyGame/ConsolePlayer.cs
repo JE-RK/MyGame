@@ -7,7 +7,7 @@ namespace MyGame
 {
     public class ConsolePlayer : Player
     {
-        public ConsolePlayer(string name, Game game) : base(name, game) { }
+        public ConsolePlayer(string name, IGame game) : base(name, game) { }
 
         private void Ending(string lineread)
         {

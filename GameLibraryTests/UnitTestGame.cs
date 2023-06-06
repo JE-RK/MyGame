@@ -1,19 +1,33 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using GameLibrary;
+using Moq;
 
 namespace GameLibraryTests
 {
     [TestClass]
     public class UnitTestGame
     {
-        private Game game;
-
+        Game game;
+        Mock <IPlayer> player1;
+        Mock<IPlayer> player2;
         [TestInitialize]
         public void TestInitialize()
         {
             game = new Game();
-            game.CreatePlayers(new Player("1", game), new Player("2", game));
+            player1 = new Mock<IPlayer>();
+            player2 = new Mock<IPlayer>();
+            player1.Setup(m => m.Name).Returns("Name1");
+            player2.Setup(m => m.Name).Returns("Name2");
+            game.CreatePlayers(player1.Object, player2.Object);
+        }
+
+        [TestMethod]
+        public void TestMethod()
+        {
+            player1.Setup(m => m.Name).Returns("Name");
+            var exception = Assert.ThrowsException<Exception>(() => game.CreatePlayers(player1.Object, player1.Object));
+            Assert.AreEqual("У игроков одинаковые имена.", exception.Message);
         }
 
         [TestMethod]
@@ -35,8 +49,12 @@ namespace GameLibraryTests
         [TestMethod]
         public void SetStep_NotThatPlayer_ExceptionThrown()
         {
-            IPlayer player = new Player("PRIVET", game);
-            var exception = Assert.ThrowsException<Exception>(() => game.NextStep(0, player));
+            IPlayer player = game.WhoseMove();
+            if (player.Name == player1.Object.Name)
+                player = player2.Object;
+            else
+                player = player1.Object;        
+            var exception = Assert.ThrowsException<Exception>(() => game.NextStep(6, player));
             Assert.AreEqual("Очередь игрока " + game.Chek, exception.Message);
         }
 
@@ -47,13 +65,6 @@ namespace GameLibraryTests
             int step = 7;
             game.NextStep(step, player);
             Assert.AreEqual(game.Score, step);
-        }
-
-        [TestMethod]
-        public void CreatePlayers_SamePlayerNames_ExceptionThrown()
-        {
-            var exception = Assert.ThrowsException<Exception>(() => game.CreatePlayers(new Player("1", game), new Player("1", game)));
-            Assert.AreEqual("У игроков одинаковые имена.", exception.Message);
         }
 
         [TestMethod]

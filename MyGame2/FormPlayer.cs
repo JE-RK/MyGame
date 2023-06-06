@@ -9,9 +9,7 @@ namespace MyGame2
 {
     public class FormPlayer : Player
     {
-        public string Name { get; }
-        private Game _game;
-        public FormPlayer(string name, Game game) : base(name, game) { }
+        public FormPlayer(string name, IGame game) : base(name, game) { }
 
         public delegate int RegStep();
         public RegStep StepMethod { get; set; }

@@ -4,11 +4,11 @@ using System.Text;
 
 namespace GameLibrary
 {
-    public class Player : IPlayer
+    public abstract class Player : IPlayer
     {
         public string Name { get; }
-        protected Game _game;
-        public Player(string name, Game game)
+        protected IGame _game;
+        public Player(string name, IGame game)
         {
             if (String.IsNullOrEmpty(name))
                 throw new Exception("Недопустимы пустые имена.");
@@ -17,7 +17,7 @@ namespace GameLibrary
             _game = game;
         }
 
-        public virtual void Step() { }
+        public abstract void Step();
 
     }
 }

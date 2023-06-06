@@ -1,126 +1,100 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using GameLibrary;
+using Moq;
 
 namespace GameLibraryTests
 {
     [TestClass]
     public class UnitTestComputer
     {
-        private Game game;
+        Mock<IGame> game;
         Computer computer;
         [TestInitialize]
         public void TestInitialize()
         {
-            game = new Game();
-            while (true)
-            {
-                game.CreatePlayers(new Player("Player", game));
-                if (game.Chek == game.player2.Name)
-                {
-                    break;
-                }
-            }
-            computer = new Computer(game);
+            game = new Mock<IGame>();
+            computer = new Computer(game.Object);
         }
 
         [TestMethod]
         public void Step_Score0_Return1()
         {
+            game.Setup(m => m.Score).Returns(0);
             computer.Step();
-            int expected = 1;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(1, computer));
         }
 
         [TestMethod]
-        public void Step_Score10_To12()
+        public void Step_Score10_Return2()
         {
-            game.SetScore(10);
+            game.Setup(m => m.Score).Returns(10);
             computer.Step();
-            int expected = 12;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(2, computer));
         }
 
         [TestMethod]
-        public void Step_Score15_To23()
+        public void Step_Score15_Return8()
         {
-            game.SetScore(15);
+            game.Setup(m => m.Score).Returns(15);
             computer.Step();
-            int expected = 23;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(8, computer));
         }
 
         [TestMethod]
-        public void Step_Score27_To34()
+        public void Step_Score27_Returns7()
         {
-            game.SetScore(27);
+            game.Setup(m => m.Score).Returns(27);
             computer.Step();
-            int expected = 34;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(7, computer));
         }
 
         [TestMethod]
-        public void Step_Score39_To45()
+        public void Step_Score39_Returns6()
         {
-            game.SetScore(39);
+            game.Setup(m => m.Score).Returns(39);
             computer.Step();
-            int expected = 45;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(6, computer));
         }
 
         [TestMethod]
-        public void Step_Score54_To56()
+        public void Step_Score54_Returns2()
         {
-            game.SetScore(54);
+            game.Setup(m => m.Score).Returns(54);
             computer.Step();
-            int expected = 56;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(2, computer));
         }
 
         [TestMethod]
-        public void Step_Score62_To67()
+        public void Step_Score62_Returns5()
         {
-            game.SetScore(62);
+            game.Setup(m => m.Score).Returns(62);
             computer.Step();
-            int expected = 67;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(5, computer));
         }
 
         [TestMethod]
-        public void Step_Score75_To78()
+        public void Step_Score75_Return3()
         {
-            game.SetScore(75);
+            game.Setup(m => m.Score).Returns(75);
             computer.Step();
-            int expected = 78;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(3, computer));
         }
 
         [TestMethod]
-        public void Step_Score87_To89()
+        public void Step_Score87_Returns2()
         {
-            game.SetScore(87);
+            game.Setup(m => m.Score).Returns(87);
             computer.Step();
-            int expected = 89;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(2, computer));
         }
 
         [TestMethod]
-        public void Step_Score95_To100()
+        public void Step_Score95_Returns5()
         {
-            game.SetScore(95);
+            game.Setup(m => m.Score).Returns(95);
             computer.Step();
-            int expected = 100;
-            int actual = game.Score;
-            Assert.AreEqual(expected, actual);
+            game.Verify(lw => lw.NextStep(5, computer));
         }
     }
 }

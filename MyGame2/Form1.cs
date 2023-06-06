@@ -45,8 +45,8 @@ namespace MyGame2
                     form2.game.CreatePlayers(p1, p2);
                 }
                 richTextBox1.Text = "Игроки созданы\n";
-                richTextBox1.Text += $"Игрок {form2.game.Chek}  ходит первым\n";
-                if (form2.GameWithBot && form2.game.Chek == form2.game.player2.Name)
+                richTextBox1.Text += $"Игрок {form2.game.StepNowPlayerName}  ходит первым\n";
+                if (form2.GameWithBot && form2.game.StepNowPlayerName == form2.game.player2.Name)
                 {
                     int lastscore = form2.game.Score;
                     form2.game.player2.Step();
@@ -72,7 +72,7 @@ namespace MyGame2
         {
             try
             {
-                if (form2.game.Chek == form2.game.player1.Name)
+                if (form2.game.StepNowPlayerName == form2.game.player1.Name)
                 {
                     form2.game.player1.Step();
                     richTextBox1.Text = "Счет - " + form2.game.Score + "\n";
@@ -83,14 +83,14 @@ namespace MyGame2
                     form2.game.player2.Step();
                     richTextBox1.Text = "Счет - " + form2.game.Score + "\n";
                 }
-                if (form2.GameWithBot && form2.game.Chek == form2.game.player2.Name)
+                if (form2.GameWithBot && form2.game.StepNowPlayerName == form2.game.player2.Name)
                 {
                     int lastscore = form2.game.Score;
                     form2.game.player2.Step();
                     richTextBox1.Text = "Бот выбрал число - " + (form2.game.Score - lastscore).ToString() + "\n";
                     richTextBox1.Text += "Счет - " + form2.game.Score + "\n";
                 }
-                richTextBox1.Text += "Ходит игрок " + form2.game.Chek + "\n";
+                richTextBox1.Text += "Ходит игрок " + form2.game.StepNowPlayerName + "\n";
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace MyGame2
             if (form2.game.EndGame() == true)
             {
                 richTextBox1.Text = "Счет - " + form2.game.Score + "\n";
-                richTextBox1.Text = "Выиграл - " + form2.game.Last + "\n";
+                richTextBox1.Text = "Выиграл - " + form2.game.LastPlayerName + "\n";
                 button2.Hide();
                 button3.Hide();
                 textBox1.Show();

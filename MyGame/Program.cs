@@ -14,7 +14,7 @@ namespace MyGame
             else
             {
                 Console.WriteLine($"Счет:  {game.Score}\n");
-                Console.WriteLine("Выиграл - " + game.Last);
+                Console.WriteLine("Выиграл - " + game.LastPlayerName);
             }
         }
         static void Main(string[] args)
@@ -24,7 +24,7 @@ namespace MyGame
             {
                 if (!game.EndGame())
                 {
-                    while (game.Chek == null)
+                    while (game.StepNowPlayerName == null)
                     {
                         try
                         {
@@ -57,8 +57,8 @@ namespace MyGame
                     {
                         try
                         {
-                            Console.WriteLine("Ходит игрок " + game.Chek);
-                            if (game.Chek == game.player1.Name)
+                            Console.WriteLine("Ходит игрок " + game.StepNowPlayerName);
+                            if (game.StepNowPlayerName == game.player1.Name)
                             {
                                 game.player1.Step();
                             }
