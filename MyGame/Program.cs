@@ -1,5 +1,7 @@
 ﻿using System;
 using GameLibrary;
+using GameLibrary.GameException;
+
 namespace MyGame
 {
     class Program
@@ -45,9 +47,9 @@ namespace MyGame
                                 game.CreatePlayers(new ConsolePlayer(p1_name, game), new ConsolePlayer(p2_name, game));
                             }
                         }
-                        catch (Exception ex)
+                        catch (GameException ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            Console.WriteLine(ex.Code);
                             Console.WriteLine("Попробуйте еще раз");
                         }
                     }
@@ -68,9 +70,20 @@ namespace MyGame
                             }
                             GameDisplay(game);
                         }
-                        catch (Exception ex)
+                        catch (GameException ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            Console.WriteLine(ex.Code);
+                            if (ex is InvalidPlayerStepException)
+                            {
+                                if (game.Score >= 91)
+                                {
+                                    Console.WriteLine("Диапазон шага от 1 до " + (100 - game.Score).ToString());
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Диапазон шага от 1 до 10");
+                                }
+                            }
                             Console.WriteLine("Попробуйте еще раз");
                         }
                     }

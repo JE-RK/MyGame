@@ -1,5 +1,5 @@
 ﻿using System;
-
+using GameLibrary.GameException;
 namespace GameLibrary
 {
     public class Game : IGame
@@ -18,7 +18,7 @@ namespace GameLibrary
             player2 = p2;
             if (player1.Name == player2.Name)
             {
-                throw new Exception("У игроков одинаковые имена.");
+                throw new GameException.InvalidUserNameException();
             }
             FirstMove();
         }
@@ -28,22 +28,16 @@ namespace GameLibrary
             player2 = new Computer(this);
             FirstMove();
         }
-        private bool IsValid(int number)
+        private void IsValid(int number)
         {
-            bool res;
-            if (number >= 1 && number <= 10)
+            if (number < 1 || number > 10)
             {
-                res = true;
-            }       
-            else
-            {
-                res = false;
+                throw new InvalidPlayerStepException();
             }
             if (number > 100 - _score)
             {
-                res = false;
+                throw new InvalidPlayerStepException();
             }
-            return res;
         }
         private void FirstMove()
         {
@@ -92,36 +86,20 @@ namespace GameLibrary
             if (_stepNowPlayerName == player.Name) 
             {
                 _lastPlayerName = player.Name;
-                string res = "";
-                if (IsValid(number))
+                IsValid(number);
+                _score += number;
+                if (_stepNowPlayerName == player1.Name)
                 {
-                    _score += number;
-                    if (_stepNowPlayerName == player1.Name)
-                    {
-                        _stepNowPlayerName = player2.Name;
-                    }
-                    else
-                    {
-                        _stepNowPlayerName = player1.Name;
-                    }
+                    _stepNowPlayerName = player2.Name;
                 }
                 else
                 {
-                    if (_score >= 91)
-                    {
-                        res += $"Диапазон хода от 1 до {100 - _score}";
-                        throw new Exception(res);
-                    }
-                    else
-                    {
-                        res += "Диапазон хода от 1 до 10";
-                        throw new Exception(res);
-                    }
+                    _stepNowPlayerName = player1.Name;
                 }
             }
             else
             {
-                throw new Exception("Очередь игрока " + StepNowPlayerName);            
+                throw new OutOfOrderInputException();            
             }
         }
     }

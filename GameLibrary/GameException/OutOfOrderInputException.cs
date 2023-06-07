@@ -4,8 +4,11 @@ using System.Text;
 
 namespace GameLibrary.GameException
 {
-    public  class OutOfOrderInputException : Exception
+    public  class OutOfOrderInputException : GameException
     {
-        public string Code => ExceptionCode.OutOfOrderInput;
+        public OutOfOrderInputException()
+        {
+            Code = ExceptionCode.OutOfOrderInput;
+        }
     }
 }

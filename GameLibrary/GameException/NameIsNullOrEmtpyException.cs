@@ -4,8 +4,11 @@ using System.Text;
 
 namespace GameLibrary.GameException
 {
-    public class NameIsNullOrEmtpyException : Exception
+    public class NameIsNullOrEmtpyException : GameException
     {
-        public string Code => ExceptionCode.NameIsNullOrEmpty;
+        public NameIsNullOrEmtpyException()
+        {
+            Code = ExceptionCode.NameIsNullOrEmpty;
+        }
     }
 }

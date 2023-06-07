@@ -4,8 +4,11 @@ using System.Text;
 
 namespace GameLibrary.GameException
 {
-    public class InvalidPlayerStepException : Exception
+    public class InvalidPlayerStepException : GameException
     {
-        public string Code => ExceptionCode.InvalidPlayerStep;
+        public InvalidPlayerStepException()
+        {
+            Code = ExceptionCode.InvalidPlayerStep;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GameLibrary.GameException;
 
 namespace GameLibrary
 {
@@ -10,14 +11,12 @@ namespace GameLibrary
         protected IGame _game;
         public Player(string name, IGame game)
         {
-            if (String.IsNullOrEmpty(name))
-                throw new Exception("Недопустимы пустые имена.");
-
+            if (String.IsNullOrWhiteSpace(name))
+                throw new NameIsNullOrEmtpyException();
             Name = name;
             _game = game;
         }
 
         public abstract void Step();
-
     }
 }

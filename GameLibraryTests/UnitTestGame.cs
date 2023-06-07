@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using GameLibrary;
+using GameLibrary.GameException;
 using Moq;
 
 namespace GameLibraryTests
@@ -23,27 +24,34 @@ namespace GameLibraryTests
         }
 
         [TestMethod]
-        public void TestMethod()
+        public void CreatePlayer_SameName_ExceptionThrown()
         {
             player1.Setup(m => m.Name).Returns("Name");
-            var exception = Assert.ThrowsException<Exception>(() => game.CreatePlayers(player1.Object, player1.Object));
-            Assert.AreEqual("У игроков одинаковые имена.", exception.Message);
+            player2.Setup(m => m.Name).Returns("Name");
+            Assert.ThrowsException<InvalidUserNameException>(() =>
+            {
+                game.CreatePlayers(player1.Object, player2.Object);
+            });
         }
 
         [TestMethod]
         public void SetStep_StepMoreThan10_ExceptionThrown()
         {
             IPlayer player = game.WhoseMove();
-            var exception = Assert.ThrowsException<Exception>(() => game.NextStep(12, player));
-            Assert.AreEqual("Диапазон хода от 1 до 10", exception.Message);
+            Assert.ThrowsException<InvalidPlayerStepException>(() =>
+            {
+                game.NextStep(12, player);
+            });
         }
 
         [TestMethod]
         public void SetStep_StepLessThan1_ExceptionThrown()
         {
             IPlayer player = game.WhoseMove();
-            var exception = Assert.ThrowsException<Exception>(() => game.NextStep(0, player));
-            Assert.AreEqual("Диапазон хода от 1 до 10", exception.Message);
+            Assert.ThrowsException<InvalidPlayerStepException>(() =>
+            {
+                game.NextStep(0, player);
+            });
         }
 
         [TestMethod]
@@ -53,9 +61,11 @@ namespace GameLibraryTests
             if (player.Name == player1.Object.Name)
                 player = player2.Object;
             else
-                player = player1.Object;        
-            var exception = Assert.ThrowsException<Exception>(() => game.NextStep(6, player));
-            Assert.AreEqual("Очередь игрока " + game.Chek, exception.Message);
+                player = player1.Object;
+            Assert.ThrowsException<OutOfOrderInputException>(() =>
+            {
+                game.NextStep(6, player); 
+            });
         }
 
         [TestMethod]

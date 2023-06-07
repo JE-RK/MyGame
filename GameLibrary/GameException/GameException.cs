@@ -4,8 +4,8 @@ using System.Text;
 
 namespace GameLibrary.GameException
 {
-    public class InavalidUserNameException : Exception
+    public abstract class GameException : Exception
     {
-        public string Code => ExceptionCode.InvalidPlayerName;
+        public string Code;
     }
 }
