@@ -88,14 +88,7 @@ namespace GameLibrary
                 _lastPlayerName = player.Name;
                 IsValid(number);
                 _score += number;
-                if (_stepNowPlayerName == player1.Name)
-                {
-                    _stepNowPlayerName = player2.Name;
-                }
-                else
-                {
-                    _stepNowPlayerName = player1.Name;
-                }
+                _stepNowPlayerName = _stepNowPlayerName == player1.Name ? player2.Name : player1.Name;
             }
             else
             {

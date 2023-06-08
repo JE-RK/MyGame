@@ -4,19 +4,24 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GameLibrary;
+using GameLibrary.GameException;
 
 namespace MyGame2
 {
     public partial class Form1 : Form
     {
         Form2 form2;
+        ResourceManager rm;
         public Form1(Form2 form2)
         {
             this.form2 = form2;
+            rm = new ResourceManager("GameLibrary.GameException.ResourceFile",
+                typeof(ExceptionCode).Assembly);
             InitializeComponent();
         }
 
@@ -63,9 +68,9 @@ namespace MyGame2
                 button2.Show();
                 button3.Show();
             }
-            catch (Exception ex)
+            catch (GameException ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(rm.GetString(ex.Code));
             }
         }
         private void button2_Click(object sender, EventArgs e)
@@ -92,9 +97,9 @@ namespace MyGame2
                 }
                 richTextBox1.Text += "Ходит игрок " + form2.game.StepNowPlayerName + "\n";
             }
-            catch (Exception ex)
+            catch (GameException ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(rm.GetString(ex.Code));
             }
             if (form2.game.EndGame() == true)
             {

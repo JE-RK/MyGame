@@ -8,7 +8,7 @@ namespace GameLibrary.GameException
     {
         public InvalidUserNameException()
         {
-            Code = ExceptionCode.InvalidPlayerName;
+            Code = ExceptionCode.InvalidPlayersName;
         }
     }
 }

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Resources;
+using System.ComponentModel;
 using GameLibrary;
 using GameLibrary.GameException;
+using System.Globalization;
+using System.Reflection;
 
 namespace MyGame
 {
@@ -20,7 +24,9 @@ namespace MyGame
             }
         }
         static void Main(string[] args)
-        {   
+        {
+            ResourceManager rm = new ResourceManager("GameLibrary.GameException.ResourceFile",
+                               typeof(ExceptionCode).Assembly);
             Game game = new Game();
             while (true)
             {
@@ -49,8 +55,12 @@ namespace MyGame
                         }
                         catch (GameException ex)
                         {
-                            Console.WriteLine(ex.Code);
+                            Console.WriteLine(rm.GetString(ex.Code));
                             Console.WriteLine("Попробуйте еще раз");
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.WriteLine("Необработанное исключение: " + ex.Message);
                         }
                     }
                     Console.WriteLine("Игра началась, чтобы выйти - \"/exit\"");
@@ -72,7 +82,7 @@ namespace MyGame
                         }
                         catch (GameException ex)
                         {
-                            Console.WriteLine(ex.Code);
+                            Console.WriteLine(rm.GetString(ex.Code));
                             if (ex is InvalidPlayerStepException)
                             {
                                 if (game.Score >= 91)
@@ -85,6 +95,10 @@ namespace MyGame
                                 }
                             }
                             Console.WriteLine("Попробуйте еще раз");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Необработанное исключение: " + ex.Message);
                         }
                     }
                 }
